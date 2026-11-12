@@ -81,7 +81,7 @@ git checkout release-0.116.x
 RELEASE_VERSION=0.116.0 make release_maven release_json
 
 git add pom.xml src/main/resources/kafka_versions.json
-git commit -m "Set version to 0.116.0"
+git commit -s -m "Set version to 0.116.0"
 git push upstream release-0.116.x
 ```
 
@@ -100,7 +100,7 @@ Always fix the issue on `main` first by creating a PR against `main`, then cherr
 ```bash
 git checkout release-0.116.x
 git cherry-pick <commit-hash>
-git push upstream release-0.116.x
+git push <repository> release-0.116.x
 ```
 
 Wait for the release branch build to go green after the cherry-pick before proceeding.
@@ -165,13 +165,13 @@ Then create a tag and a GitHub release for the RC in both repositories:
 # test-container-images
 git checkout release-0.116.x
 git tag 0.116.0-rc1
-git push upstream 0.116.0-rc1
+git push <repository> 0.116.0-rc1
 
 # test-container
 cd ../test-container
 git checkout release-0.116.x
 git tag 0.116.0-rc1
-git push upstream 0.116.0-rc1
+git push <repository> 0.116.0-rc1
 ```
 
 Create GitHub releases from these tags in both repositories, marking them as pre-releases.
@@ -219,13 +219,13 @@ Then create a tag and a GitHub release for the GA in both repositories:
 # test-container-images
 git checkout release-0.116.x
 git tag 0.116.0
-git push upstream 0.116.0
+git push <repository> 0.116.0
 
 # test-container
 cd ../test-container
 git checkout release-0.116.x
 git tag 0.116.0
-git push upstream 0.116.0
+git push <repository> 0.116.0
 ```
 
 ### 8. Post-release
