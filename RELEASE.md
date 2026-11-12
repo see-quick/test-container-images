@@ -14,15 +14,15 @@ announce the RC for community testing, and once approved, build and publish the 
 
 At a high level, the release follows these steps:
 
-1. **Create release branches** in both repositories
+1. **Create release branches** in both repositories and bump the SNAPSHOT version on `main`
 2. **Prepare version files** (Kafka versions, connectors, pom.xml)
 3. **Wait for CI** to pass on both release branches
 4. **Build and publish RC images** from this repo
 5. **Release RC of the Java library** and publish to Maven Central
-6. **Announce the RC** to the community and wait for feedback
+6. **Announce the RC** to the community, open bump PRs in Strimzi projects and wait for feedback
 7. **Build and publish GA images** once the RC is approved
 8. **Release GA of the Java library** and publish to Maven Central
-9. **Post-release:** verify artifacts, create GitHub releases, bump SNAPSHOT version
+9. **Post-release:** verify artifacts, create GitHub releases, announce the GA, move the bump PRs to the GA version
 
 ## Prerequisites
 
@@ -67,6 +67,9 @@ For example:
 
 For a new minor release, create a fresh branch from the tip of `main` in both repositories and push it to the upstream remote.
 For a patch release, the branch already exists, so skip this step.
+
+Right after creating the branch for a new minor release, bump the SNAPSHOT version on `main` in `strimzi/test-container` to the next minor version (e.g., `0.117.0-SNAPSHOT` once `release-0.116.x` exists).
+From then on `main` may contain changes that will never reach the release being prepared, so it should no longer carry that release's version.
 
 ### 2. Prepare the release branches
 
@@ -180,6 +183,10 @@ Then announce the RC:
 - Send an announcement to the **cncf-strimzi-users** mailing list
 - Post in the **#strimzi** Slack channel
 
+Also open PRs bumping `strimzi-test-container` to the RC version in the Strimzi projects that use it
+(e.g., strimzi-kafka-operator, strimzi-kafka-bridge, metrics-reporter, test-clients, strimzi-mqtt-bridge).
+Their CI runs every RC against real usage, and for each new RC the same PRs are updated rather than opening new ones.
+
 ### 6. Release GA images from test-container-images
 
 Once the RC has been tested and approved by the community, trigger the **Release** workflow again with the GA version:
@@ -233,4 +240,5 @@ git push <repository> 0.116.0
 - Verify the GA images are available on [Quay.io](https://quay.io/organization/strimzi-test-container)
 - Verify the Maven artifact is available on [Maven Central](https://central.sonatype.com/artifact/io.strimzi/strimzi-test-container)
 - Create GitHub releases in both repositories
-- Bump the SNAPSHOT version on `main` in `strimzi/test-container` if needed
+- Announce the GA release on the **cncf-strimzi-users** mailing list and in the **#strimzi** Slack channel
+- Update the bump PRs opened during the RC to the GA version (and retitle them), so they can be merged
